@@ -1,0 +1,72 @@
+.error {
+    color:red;
+    font-size:24px;
+    font-weight: bold;
+}
+
+.blue
+    {
+        color:blue;
+    }
+.green 
+    {
+        color:green;
+    }
+.parna :hover
+    {
+        color: white;
+        background-color: blue;
+    }
+.neparna :hover
+    {
+        color: yellow;
+        background-color: black;
+    }
+.parna a
+    {
+        text-decoration: none;
+    }
+.neparna a
+    {
+        text-decoration: none;
+    }
+li
+    {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+/*Login forma*/
+body
+    {
+        width:100%;
+    }
+.login
+    {
+        width:25%;
+        margin-left:auto;
+        margin-right:auto;
+        margin-top: 50px;
+        text-align: center;
+    }
+
+fieldset
+    {
+        display:inline;
+        margin-left: auto;
+        margin-right:auto;
+        text-align: left;
+    }
+
+h1 
+    {
+        color:blue;
+        text-align: center;
+        margin:50px;
+    }
+
+.poruka
+    {
+        color:red;
+        text-align: center;
+    }
