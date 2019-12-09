@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <?php
-require_once 'dm_konekcija.php';
 
-$id=1;
+require_once 'dm_header.php';
+
+$id=$_SESSION['id'];
 $sql = 
 ("SELECT `profiles`.`name`, `profiles`.`dob`, `users`.`username`, `users`.`password`
 FROM profiles 
@@ -97,12 +98,6 @@ if(isset($_POST['potvrdi']))
 ?>
 
 
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-
-    <body>
         <form action="dm_izmeniprofil.php" method="POST">
             <label for="">Ime i prezime:</label>
             <input type="text" name="ime" value="<?php echo $a['name']; ?>">

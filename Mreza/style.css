@@ -70,3 +70,23 @@ h1
         color:red;
         text-align: center;
     }
+.menu
+    {
+        display: flex;
+        flex-direction: row;
+        padding-left:0px;
+    }
+.menu li
+    {
+        list-style: none;
+        
+    }
+.menu li a
+    {
+        text-decoration: none;
+        padding: 10px;
+    }
+.menu li :hover
+    {
+        background-color: greenyellow;
+    }

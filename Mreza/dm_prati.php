@@ -6,13 +6,14 @@
     <body>
 
 <?php
+    session_start();
     require_once 'dm_konekcija.php';
     $friend_id = 
         $konekcija->real_escape_string($_GET['friend_id']); //i to skuplja iz URLa ono sto smo mu poslali kroz url, dakle GET skuplja iz URLa, mozes da posaljes sta god hoces i koliko hoces, pocinjes znakom pitanja '?', nastavljas umpersentom '&'
         //ova real_escape_string mora da se radi da bi se sprecili sql injection-i, dakle da neko zloupotrebi i ubrizga nesto sto ne bi trebalo
 
     var_dump($friend_id);
-    $id=3;//na primer id logovanog korisnika
+    $id=$_SESSION['id'];//na primer id logovanog korisnika
 
     $sql = ("SELECT * FROM `follow` WHERE `user_id` = $id AND `friend_id` = $friend_id");
 

@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-
-    <body>
         
 
 <?php 
 
-require_once 'dm_konekcija.php';
 
-$id=3;//id logovanog korisnika
+require_once 'dm_header.php';
+
+$id=$_SESSION['id'];;//id logovanog korisnika koji citamo iz sesije
+
 
 $upit = 
 ("SELECT u.id, u.username, p.user_id, p.name, p.dob FROM users AS u

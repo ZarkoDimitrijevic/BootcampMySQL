@@ -39,6 +39,7 @@
 </script>
 
 <?php 
+session_start();
 require_once 'dm_konekcija.php';
 $poruka='';
 
@@ -61,7 +62,9 @@ else
     if($result->num_rows == 1)
     {
         echo "Bravo uspesno logovanje";
-        header('Location: dm_prijatelji.php');
+        $id = $result->fetch_assoc()['id'];
+        $_SESSION['id'] = $id; 
+        header('Location: dm_prijatelji2.php');
     }
     else
     {

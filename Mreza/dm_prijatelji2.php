@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body>
+
 <?php
+    require_once 'dm_header.php';
     
     //Prikazati sve korisnike koji nisu ja
     //1) povezivanje na bazu
     require_once 'dm_konekcija.php';
 
     //2) prikazati sve korisnike osim logovanih
-    $id=1;//id logovanog korisnika
+    $id=$_SESSION['id'];//id logovanog korisnika
 
     if(!empty($_GET['dodaj']))
     {
