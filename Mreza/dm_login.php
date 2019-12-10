@@ -46,7 +46,7 @@ $poruka='';
 if(isset($_POST['submit']))
 {
     $username = $konekcija->real_escape_string($_POST['username']);
-    $password = $konekcija->real_escape_string($_POST['password']);
+    $password = MD5($konekcija->real_escape_string($_POST['password']));//sifrirano jer smo tako namestili u bazi
 
 
 $sql = 
@@ -63,7 +63,12 @@ else
     {
         echo "Bravo uspesno logovanje";
         $id = $result->fetch_assoc()['id'];
-        $_SESSION['id'] = $id; 
+        $_SESSION['id'] = $id;
+        $sql = 
+        ("SELECT * FROM profiles WHERE user_id = $id");
+        $result = $konekcija->query($sql);
+        $result = $result->fetch_assoc();
+        $_SESSION['name'] = $result['name']; 
         header('Location: dm_prijatelji2.php');
     }
     else

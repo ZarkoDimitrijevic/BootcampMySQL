@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <?php
-
 require_once 'dm_header.php';
 
-$id=$_SESSION['id'];
+$id = $_SESSION['id'];
 $sql = 
 ("SELECT `profiles`.`name`, `profiles`.`dob`, `users`.`username`, `users`.`password`
 FROM profiles 
 INNER JOIN users
-ON `users`.`id` = `profiles`.`id`
+ON `users`.`id` = `profiles`.`user_id`
 WHERE `profiles`.`user_id` = $id");
 $rezultat = $konekcija->query($sql);
 
@@ -18,21 +17,20 @@ if(!$rezultat)
 }
 else
 {
-    echo "bravo";
+    //echo "bravo";
     $a = $rezultat->fetch_assoc();
-    //var_dump($a);
+    $imevalue = $a['name'];
+    $usernamevalue = $a['username'];
+    $datumvalue = $a['dob'];
 }
 
-$imeError = $datumError = $usernameError = $passwordError = $re_passwordError = '*';
+$imeError = $datumError = $usernameError = '*';
 
 if(isset($_POST['potvrdi']))
 {
     $ime = $konekcija->real_escape_string($_POST['ime']);
     $datum = $konekcija->real_escape_string($_POST['datum']);
     $username = $konekcija->real_escape_string($_POST['username']);
-    $password = $konekcija->real_escape_string($_POST['password']);
-    $re_password = $konekcija->real_escape_string($_POST['re_password']);
-
     
     if(empty($ime))
     {
@@ -48,51 +46,54 @@ if(isset($_POST['potvrdi']))
     {
         $usernameError = 'Niste uneli username!';
     }
-
-    if(empty($password))
-    {
-        $passwordError = 'Niste uneli password!';
-    }
-
-    if(empty($re_password))
-    {
-        $re_passwordError = 'Polje ne moze biti prazno!';
-    }
-
-    if($password!==$re_password)
-    {
-        $re_passwordError = 'Lozinka i ponovljenja lozinka moraju biti isti!';
-    }
-
-    if($imeError == '*' && $datumError == '*' && $usernameError == '*' && $passwordError == '*' && $re_passwordError == '*')
-    {
-    $sql = 
-    ("UPDATE `profiles` SET `name` = '$ime', `dob`='$datum' WHERE `user_id`=$id ");
-
-    $result = $konekcija->query($sql);
-
-    if(!$result)
-    {
-        echo "error" . $konekcija->error;
-    }
     else
     {
-        echo "bravo";
+        //Proveravamo da nije doslo do poklapanja korisnickih imena
+        $sql = 
+        ("SELECT username FROM users WHERE id != $id AND username = '$username'");
+        $result = $konekcija->query($sql);
+        if($result->num_rows > 0)
+        {
+            $usernameError = "Korisnicko ime je zauzeto!";
+        }
+        
     }
 
-    $sql = 
-    ("UPDATE `users` SET `username` = '$username', `password` = '$password' WHERE `id` = $id");
-    $result = $konekcija->query($sql);
 
-    if(!$result)
-    {
-        echo "error" . $konekcija->error;
-    }
-    else
-    {
-        echo "Bravo";
-    }
+
+    if($imeError == '*' && $datumError == '*' && $usernameError == '*')
+    {   
+        $imevalue=$ime;
+        $datumvalue = $datum;
+        $usernamevalue = $username;
+
+        $sql = 
+        ("UPDATE `profiles` SET `name` = '$ime', `dob`='$datum' WHERE `user_id`=$id ");
+        $result = $konekcija->query($sql);
+
+        if(!$result)
+        {
+            echo "error" . $konekcija->error;
+        }
+        else
+        {
+            //echo "bravo";
+        }
+
+        $sql = 
+        ("UPDATE `users` SET `username` = '$username' WHERE `id` = $id");
+        $result = $konekcija->query($sql);
+
+        if(!$result)
+        {
+            echo "error" . $konekcija->error;
+        }
+        else
+        {
+            //echo "Bravo";
+        }
    }
+   //header('Location: dm_izmeniprofil.php');
 }
 
 ?>
@@ -100,28 +101,18 @@ if(isset($_POST['potvrdi']))
 
         <form action="dm_izmeniprofil.php" method="POST">
             <label for="">Ime i prezime:</label>
-            <input type="text" name="ime" value="<?php echo $a['name']; ?>">
+            <input type="text" name="ime" value="<?php echo $imevalue; ?>">
             <span class='error'><?php echo $imeError;?></span>
             <br>
             <br>
             <label for="">Datum rodjenja: </label>
-            <input type="date" name="datum" value="<?php echo $a['dob']; ?>">
+            <input type="date" name="datum" value="<?php echo $datumvalue; ?>">
             <span class='error'><?php echo $datumError;?></span>
             <br>
             <br>
             <label for="">Korisnicko ime:</label>
-            <input type="text" name="username" value="<?php echo $a['username']; ?>">
+            <input type="text" name="username" value="<?php echo $usernamevalue; ?>">
             <span class='error'><?php echo $usernameError;?></span>
-            <br>
-            <br>
-            <label for="">Lozinka</label>
-            <input type="password" name="password" value="<?php echo $a['password']; ?>">
-            <span class='error'><?php echo $passwordError;?></span>
-            <br>
-            <br>
-            <label for="">Potvrdi lozinku</label>
-            <input type="password" name="re_password">
-            <span class='error'><?php echo $re_passwordError;?></span>
             <br>
             <br>
             <!--Objasnjenje kako chekirati radio button

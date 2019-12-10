@@ -79,12 +79,14 @@ $poruka='';
 if(isset($_POST['submit']))
 {
     $username = $konekcija->real_escape_string($_POST['username']);
-    $password = $konekcija->real_escape_string($_POST['password']);
-    $re_password = $konekcija->real_escape_string($_POST['password1']);
+    $password = MD5($konekcija->real_escape_string($_POST['password']));//sifrirano funkcijom MD5
+    $re_password = MD5($konekcija->real_escape_string($_POST['password1']));//sifrirano funkcijom MD5
+    $name = $konekcija->real_escape_string($_POST['name']);
+    $date = $konekcija->real_escape_string($_POST['date']);
 
-    if(empty($username) || empty($password) || empty($re_password))
+    if(empty($username) || empty($password) || empty($re_password) || empty($name) || empty($date))
     {
-        $poruka = 'Username, Password i ponovljeni Password ne mogu biti prazna polja';
+        $poruka = 'Username, Password, ponovljeni Password, Name i Date ne mogu biti prazna polja';
     }
     elseif($password!==$re_password)
     {
@@ -93,19 +95,48 @@ if(isset($_POST['submit']))
     else
     {
         $sql = 
-        ("INSERT INTO users (`username`, `password`)
-            VALUES('$username', '$password')");
+        ("SELECT `id` FROM users WHERE username = '$username'");
         $result = $konekcija->query($sql);
-
-        if(!$result)
+        if($result->fetch_assoc()!=0)
         {
-            echo "Doslo je do greske u upitu: " . $konekcija->error;
+            $poruka = 'Uneto korisnicko ime je zauzeto, molimo Vas unesite novo ili se <a href="dm_login.php">logujte
+                </a>!';
         }
         else
-        {
-            header('Location:dm_prijatelji.php');
+        {    
+            $sql = 
+            ("INSERT INTO users (`username`, `password`)
+                VALUES('$username', '$password')");
+            $result = $konekcija->query($sql);
+            if(!$result)
+            {
+                echo "Doslo je do greske u upitu: " . $konekcija->error;
+            }
+           
+            $sql = 
+            ("SELECT id FROM users WHERE username='$username'");
+            $result = $konekcija->query($sql);
+            $red = $result->fetch_assoc()['id'];
+            if(!$result)
+            {
+                echo "Doslo je do greske u upitu: " . $konekcija->error;
+            }
+            
+            $sql = 
+            ("INSERT INTO profiles (`user_id`, `name`, `dob`)
+            VALUES($red, '$name', '$date')");
+            $result = $konekcija->query($sql);
+            if(!$result)
+            {
+                echo "Doslo je do greske u upitu: " . $konekcija->error;
+            }
+            else
+            {
+                header('Location:dm_prijatelji.php');
+            }
         }
-    }
+    }    
+
 }
 ?>
 <html>
@@ -138,6 +169,14 @@ if(isset($_POST['submit']))
                 <input type="password" name="password1" id="password1">
                 <span id="checkbox1" class="glyphicon glyphicon-eye-close unchecked" onclick="myFunction1()"></span>
                 <!--<input id='checkbox1' type="checkbox" name="prikazipass1" onclick="myFunction1()">-->
+                <br>
+                <label for="">Unesite name & surname:</label>
+                <br>
+                <input type="text" name="name">
+                <br>
+                <label for="">Unesite datum rodjenja:</label>
+                <br>
+                <input type="date" name="date">
                 <br><br>
                 <input type="submit" name="submit" value="Loguj se">
             </form>

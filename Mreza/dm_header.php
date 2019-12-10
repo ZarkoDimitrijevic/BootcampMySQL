@@ -17,7 +17,7 @@ if(empty($_SESSION['id']))
     </head>
 
     <body>
-
+        <p><?php echo "Zdravo " . $_SESSION['name']; ?></p>
         <ul class="menu">
             <li>
                 <a href="dm_prijatelji2.php">Prijatelji</a>
@@ -26,6 +26,10 @@ if(empty($_SESSION['id']))
                 <a href="dm_izmeniprofil">Moj profil</a>
             </li>
             <li>
+                <a href = "dm_izmenilozinku.php">Promeni lozinku</a>
+            </li>
+            <li>
                 <a href="dm_logout">Logout</a>
             </li>
+
         </ul>
